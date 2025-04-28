@@ -7,22 +7,25 @@ import {
   Share,
   Undo
 } from 'lucide-react';
+import type { Theme } from '../hooks/useTheme';
 
 interface ControlsProps {
   onFormat: () => void;
   onMinify: () => void;
   onReset: () => void;
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
+  theme: Theme;
+  onThemeChange: (theme: Theme) => void;
 }
 
 const Controls: React.FC<ControlsProps> = ({ 
   onFormat, 
   onMinify, 
   onReset,
-  darkMode,
-  onToggleDarkMode
+  theme,
+  onThemeChange
 }) => {
+  const isDarkMode = theme === 'dark' || theme === 'black' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
   return (
     <div className="bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-700 p-2 flex justify-between items-center">
       <div className="flex space-x-2">
@@ -54,10 +57,10 @@ const Controls: React.FC<ControlsProps> = ({
       <div className="flex space-x-2">
         <button 
           className="flex items-center p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-gray-600 dark:text-gray-400"
-          onClick={onToggleDarkMode}
-          title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          onClick={() => onThemeChange(isDarkMode ? 'light' : 'dark')}
+          title={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
         >
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
         </button>
         
         <button 
