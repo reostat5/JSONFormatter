@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.theme-white {
+  --bg-primary: theme('colors.white');
+  --text-primary: theme('colors.black');
+  --border-color: theme('colors.gray.200');
+}
+
+.theme-black {
+  --bg-primary: theme('colors.black');
+  --text-primary: theme('colors.white');
+  --border-color: theme('colors.gray.800');
+}
+
+.theme-white,
+.theme-black {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.theme-white *,
+.theme-black * {
+  border-color: var(--border-color);
+}
