@@ -67,6 +67,8 @@ function App() {
         onFormat={formatInput}
         onMinify={minifyInput}
         onReset={resetInput}
+        theme={theme}
+        onThemeChange={setTheme}
       />
       
       <main 
@@ -107,4 +109,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
