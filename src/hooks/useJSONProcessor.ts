@@ -19,7 +19,6 @@ export const useJSONProcessor = (initialValue: string = ''): JSONProcessorResult
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const workerRef = useRef<Worker | null>(null);
-  const isInitialLoad = useRef<boolean>(true);
 
   // Initialize worker
   useEffect(() => {
@@ -56,20 +55,11 @@ export const useJSONProcessor = (initialValue: string = ''): JSONProcessorResult
       return;
     }
 
-    // Don't show loading state for initial sample JSON load
-    if (!isInitialLoad.current || action !== 'parse') {
+    if (action !== 'parse') {
       setIsLoading(true);
     }
-    
     workerRef.current?.postMessage({ action, data: jsonString });
-    isInitialLoad.current = false;
   }, []);
-
-  useEffect(() => {
-    if (initialValue) {
-      processJSON(initialValue);
-    }
-  }, [initialValue, processJSON]);
 
   const handleInputChange = useCallback((input: string) => {
     setInputJSON(input);

@@ -8,21 +8,15 @@ interface JSONInputProps {
 }
 
 const JSONInput: React.FC<JSONInputProps> = ({ onJSONInput, isLoading }) => {
-  const [inputText, setInputText] = useState<string>('');
+  const [inputText, setInputText] = useState<string>(() => {
+    const sample = getSampleJSON();
+    setTimeout(() => onJSONInput(sample), 0);
+    return sample;
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
-  const isInitialized = useRef<boolean>(false);
   
-  useEffect(() => {
-    if (!isInitialized.current && !inputText) {
-      const sample = getSampleJSON();
-      setInputText(sample);
-      onJSONInput(sample);
-      isInitialized.current = true;
-    }
-  }, [inputText, onJSONInput]);
-
   useEffect(() => {
     const textarea = textareaRef.current;
     const lineNumbers = lineNumbersRef.current;
@@ -48,7 +42,6 @@ const JSONInput: React.FC<JSONInputProps> = ({ onJSONInput, isLoading }) => {
   const handlePasteClick = async () => {
     try {
       const text = await navigator.clipboard.readText();
-      isInitialized.current = true; // Prevent re-initialization
       setInputText(text);
       onJSONInput(text);
     } catch (err) {
@@ -57,9 +50,8 @@ const JSONInput: React.FC<JSONInputProps> = ({ onJSONInput, isLoading }) => {
   };
 
   const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault(); // Prevent default paste behavior
+    e.preventDefault();
     const text = e.clipboardData.getData('text');
-    isInitialized.current = true; // Prevent re-initialization
     setInputText(text);
     onJSONInput(text);
   };
@@ -77,7 +69,6 @@ const JSONInput: React.FC<JSONInputProps> = ({ onJSONInput, isLoading }) => {
     const reader = new FileReader();
     reader.onload = (event) => {
       const content = event.target?.result as string;
-      isInitialized.current = true; // Prevent re-initialization
       setInputText(content);
       onJSONInput(content);
     };
@@ -87,7 +78,6 @@ const JSONInput: React.FC<JSONInputProps> = ({ onJSONInput, isLoading }) => {
   };
   
   const handleClearClick = () => {
-    isInitialized.current = true; // Prevent re-initialization
     setInputText('');
     onJSONInput('');
   };
